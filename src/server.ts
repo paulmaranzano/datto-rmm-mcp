@@ -65,43 +65,54 @@ export function buildServer(): BuiltServer {
       shape[key] = zodType;
     }
 
-    server.tool(tool.name, tool.description, shape, async (args: Record<string, unknown>) => {
-      try {
-        const stringArgs: Record<string, string> = {};
-        for (const [k, v] of Object.entries(args)) {
-          if (v !== undefined) stringArgs[k] = String(v);
-        }
+    // MCP tool annotations let clients (e.g. Claude) treat read tools as safe to run without a prompt.
+    const annotations = isDestructive
+      ? { readOnlyHint: false, destructiveHint: true }
+      : { readOnlyHint: true, destructiveHint: false, idempotentHint: true };
 
-        if (confirmToken) {
-          const given = stringArgs.confirm;
-          if (given !== confirmToken) {
-            throw new Error(
-              `Destructive tool "${tool.name}" requires confirm: "${confirmToken}" (got: ${
-                given ? `"${given}"` : 'missing'
-              })`,
-            );
+    server.tool(
+      tool.name,
+      tool.description,
+      shape,
+      annotations,
+      async (args: Record<string, unknown>) => {
+        try {
+          const stringArgs: Record<string, string> = {};
+          for (const [k, v] of Object.entries(args)) {
+            if (v !== undefined) stringArgs[k] = String(v);
           }
-          delete stringArgs.confirm;
-        }
 
-        const result = await tool.handler(stringArgs);
-        return { ...result } as {
-          content: Array<{ type: 'text'; text: string }>;
-          isError?: boolean;
-          [key: string]: unknown;
-        };
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : String(err);
-        return {
-          content: [{ type: 'text' as const, text: `Error: ${message}` }],
-          isError: true,
-        } as {
-          content: Array<{ type: 'text'; text: string }>;
-          isError: boolean;
-          [key: string]: unknown;
-        };
-      }
-    });
+          if (confirmToken) {
+            const given = stringArgs.confirm;
+            if (given !== confirmToken) {
+              throw new Error(
+                `Destructive tool "${tool.name}" requires confirm: "${confirmToken}" (got: ${
+                  given ? `"${given}"` : 'missing'
+                })`,
+              );
+            }
+            delete stringArgs.confirm;
+          }
+
+          const result = await tool.handler(stringArgs);
+          return { ...result } as {
+            content: Array<{ type: 'text'; text: string }>;
+            isError?: boolean;
+            [key: string]: unknown;
+          };
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : String(err);
+          return {
+            content: [{ type: 'text' as const, text: `Error: ${message}` }],
+            isError: true,
+          } as {
+            content: Array<{ type: 'text'; text: string }>;
+            isError: boolean;
+            [key: string]: unknown;
+          };
+        }
+      },
+    );
 
     registeredCount++;
   }
