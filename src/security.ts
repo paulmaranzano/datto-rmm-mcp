@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 export const CONFIRM_REQUIRED_TOOLS: ReadonlySet<string> = new Set([
-  'reset-api-keys',
   'create-quick-job',
   'move-device',
   'resolve-alert',

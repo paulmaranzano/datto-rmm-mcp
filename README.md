@@ -7,6 +7,13 @@
 
 A Model Context Protocol (MCP) server that provides **55 tools** for the Datto RMM API. All tool schemas are **Copilot Studio compatible** (flat schemas, no `$ref`, no `anyOf`, no nested objects).
 
+> **Fork note (paulmaranzano/datto-rmm-mcp, branch `azure-http`).** This fork adds a stateless
+> Streamable HTTP transport for hosting behind an authenticating reverse proxy, and removes the
+> `reset-api-keys` tool entirely. Set `MCP_TRANSPORT=http` with `MCP_HTTP_TOKEN` (required bearer),
+> optional `MCP_HTTP_HOST` (default `0.0.0.0`) and `MCP_HTTP_PORT` (default `3000`). Endpoints:
+> `POST /mcp`, `GET /health`. The Dockerfile builds this mode with `DATTO_MCP_READONLY=true` by default.
+> Tool counts below describe upstream; this fork has 54 tools (39 in readonly mode).
+
 ## Features
 
 - **55 Tools** covering the complete Datto RMM API v2

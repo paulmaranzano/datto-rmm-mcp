@@ -19,10 +19,9 @@ afterEach(() => {
 });
 
 describe('CONFIRM_REQUIRED_TOOLS', () => {
-  it('contains exactly the 10 high-risk tool names that require a confirm token', () => {
-    expect(CONFIRM_REQUIRED_TOOLS.size).toBe(10);
+  it('contains exactly the 9 high-risk tool names that require a confirm token', () => {
+    expect(CONFIRM_REQUIRED_TOOLS.size).toBe(9);
     for (const name of [
-      'reset-api-keys',
       'create-quick-job',
       'move-device',
       'resolve-alert',
@@ -39,10 +38,9 @@ describe('CONFIRM_REQUIRED_TOOLS', () => {
 });
 
 describe('DESTRUCTIVE_TOOLS', () => {
-  it('contains exactly the 16 destructive tool names (10 confirm-required + 6 plain writes)', () => {
-    expect(DESTRUCTIVE_TOOLS.size).toBe(16);
+  it('contains exactly the 15 destructive tool names (9 confirm-required + 6 plain writes)', () => {
+    expect(DESTRUCTIVE_TOOLS.size).toBe(15);
     for (const name of [
-      'reset-api-keys',
       'create-quick-job',
       'move-device',
       'resolve-alert',
@@ -72,7 +70,7 @@ describe('DESTRUCTIVE_TOOLS', () => {
 
 describe('confirmTokenFor', () => {
   it('uppercases and converts kebab to snake', () => {
-    expect(confirmTokenFor('reset-api-keys')).toBe('RESET_API_KEYS');
+    expect(confirmTokenFor('create-quick-job')).toBe('CREATE_QUICK_JOB');
     expect(confirmTokenFor('move-device')).toBe('MOVE_DEVICE');
     expect(confirmTokenFor('set-device-warranty')).toBe('SET_DEVICE_WARRANTY');
   });

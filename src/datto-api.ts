@@ -342,11 +342,6 @@ export class DattoApi {
   async getPaginationConfig() {
     return this.apiCall('GET', '/v2/system/pagination');
   }
-
-  // User
-  async resetApiKeys() {
-    return this.apiCall('POST', '/v2/user/resetApiKeys');
-  }
 }
 
 export const api = new DattoApi();

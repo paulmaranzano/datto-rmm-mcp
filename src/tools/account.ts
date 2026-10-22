@@ -219,14 +219,4 @@ export const accountTools: ToolDefinition[] = [
       return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     },
   },
-  {
-    name: 'reset-api-keys',
-    description:
-      'Reset the authenticated user API keys. WARNING: This will invalidate current credentials.',
-    inputSchema: { type: 'object', properties: {}, required: [] },
-    handler: async () => {
-      const result = await api.resetApiKeys();
-      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
-    },
-  },
 ];
